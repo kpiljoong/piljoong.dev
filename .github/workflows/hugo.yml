@@ -22,7 +22,7 @@ defaults:
 jobs:
   build:
     runs-on: ubuntu-latest
-    evn:
+    env:
       HUGO_VERSION: 0.128.0
 
     steps:
