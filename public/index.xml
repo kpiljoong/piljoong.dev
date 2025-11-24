@@ -2,7 +2,7 @@
     <channel>
         <title>piljoong.dev</title>
         <link>http://localhost:1313/</link>
-        <description>This is my cool site</description>
+        <description>piljoong&#39;s tech blog</description>
         <generator>Hugo -- gohugo.io</generator><language>en-us</language><managingEditor>kpiljoong@gmail.com (piljoong)</managingEditor>
             <webMaster>kpiljoong@gmail.com (piljoong)</webMaster><lastBuildDate>Mon, 24 Nov 2025 23:25:00 &#43;0900</lastBuildDate>
             <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />

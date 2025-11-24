@@ -5,6 +5,13 @@ theme = "LoveIt"
 
 [params]
     ShowReadingTime = true
+    title = "piljoong.dev"
+    description = "piljoong's tech blog"
+[params.header.title]
+    logo = ""
+    name = "piljoong.dev"
+[params.home.profile]
+    subtitle = ""
 [params.author]
     name = "piljoong"
     email = "kpiljoong@gmail.com"
