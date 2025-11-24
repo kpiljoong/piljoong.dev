@@ -1,0 +1,7 @@
+baseURL = 'https://piljoong.dev/'
+languageCode = 'en-us'
+title = 'piljoong.dev'
+theme = "PaperMod"
+
+[params]
+    ShowReadingTime = true
