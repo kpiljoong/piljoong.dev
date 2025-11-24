@@ -1,7 +1,15 @@
 baseURL = 'https://piljoong.dev/'
 languageCode = 'en-us'
 title = 'piljoong.dev'
-theme = "PaperMod"
+theme = "LoveIt"
 
 [params]
     ShowReadingTime = true
+[params.author]
+    name = "piljoong"
+    email = "kpiljoong@gmail.com"
+[params.page.share]
+    enable = true
+    Linkiedin = true
+    Reddit = true
+    Weibo = false
