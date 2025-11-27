@@ -7,7 +7,8 @@
         <title>Hello World - piljoong.dev</title><meta name="Description" content="piljoong&#39;s tech blog"><meta property="og:url" content="http://localhost:1313/posts/hello-world/">
   <meta property="og:site_name" content="piljoong.dev">
   <meta property="og:title" content="Hello World">
-  <meta property="og:description" content="piljoong&#39;s tech blog">
+  <meta property="og:description" content="Understanding Distributed ID Generation: When You Need It, Why It’s Hard, and What the Tradeoffs Look Like Most systems start with auto-increment IDs, and that’s fine. They’re simple, predictable, and work perfectly well until they don’t. The problem is that “until they don’t” usually arrives without much warning, often when you’re already dealing with other scaling challenges.
+I’ve seen this play out a few times now. The transition from simple sequential IDs to distributed generation is never just a technical change—it ripples through your entire architecture in ways that aren’t obvious until you’re in the middle of it.">
   <meta property="og:locale" content="en_us">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
@@ -16,7 +17,8 @@
 
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Hello World">
-  <meta name="twitter:description" content="piljoong&#39;s tech blog">
+  <meta name="twitter:description" content="Understanding Distributed ID Generation: When You Need It, Why It’s Hard, and What the Tradeoffs Look Like Most systems start with auto-increment IDs, and that’s fine. They’re simple, predictable, and work perfectly well until they don’t. The problem is that “until they don’t” usually arrives without much warning, often when you’re already dealing with other scaling challenges.
+I’ve seen this play out a few times now. The transition from simple sequential IDs to distributed generation is never just a technical change—it ripples through your entire architecture in ways that aren’t obvious until you’re in the middle of it.">
 <meta name="application-name" content="My cool site">
 <meta name="apple-mobile-web-app-title" content="My cool site"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -31,7 +33,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "http:\/\/localhost:1313\/posts\/hello-world\/"
-        },"genre": "posts","wordcount":  0 ,
+        },"genre": "posts","wordcount":  2036 ,
         "url": "http:\/\/localhost:1313\/posts\/hello-world\/","datePublished": "2025-11-24T23:25:00+09:00","dateModified": "2025-11-24T23:25:00+09:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
@@ -73,15 +75,138 @@
             <div class="toc-content" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Hello World</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>piljoong</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2025-11-24">2025-11-24</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;0 words&nbsp;
-                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;0 minutes&nbsp;</div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2025-11-24">2025-11-24</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;2036 words&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;10 minutes&nbsp;</div>
         </div><div class="details toc" id="toc-static"  data-kept="">
                 <div class="details-summary toc-title">
                     <span>Contents</span>
                     <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
                 </div>
-                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents"></nav></div>
-            </div><div class="content" id="content"></div><div class="post-footer" id="post-footer">
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#how-i-got-here">How I Got Here</a></li>
+    <li><a href="#when-auto-increment-actually-becomes-a-problem">When Auto-Increment Actually Becomes a Problem</a></li>
+    <li><a href="#the-landscape-of-distributed-ids">The Landscape of Distributed IDs</a></li>
+    <li><a href="#what-i-learned-from-ulid-at-scale">What I Learned from ULID at Scale</a></li>
+    <li><a href="#where-snowflake-shows-its-age">Where Snowflake Shows Its Age</a></li>
+    <li><a href="#why-i-built-orderlyid">Why I Built OrderlyID</a></li>
+    <li><a href="#choosing-an-id-strategy">Choosing an ID Strategy</a></li>
+    <li><a href="#what-i-got-wrong">What I Got Wrong</a></li>
+    <li><a href="#closing-thoughts">Closing Thoughts</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h1 id="understanding-distributed-id-generation-when-you-need-it-why-its-hard-and-what-the-tradeoffs-look-like">Understanding Distributed ID Generation: When You Need It, Why It&rsquo;s Hard, and What the Tradeoffs Look Like</h1>
+<p>Most systems start with auto-increment IDs, and that&rsquo;s fine. They&rsquo;re simple, predictable, and work perfectly well until they don&rsquo;t. The problem is that &ldquo;until they don&rsquo;t&rdquo; usually arrives without much warning, often when you&rsquo;re already dealing with other scaling challenges.</p>
+<p>I&rsquo;ve seen this play out a few times now. The transition from simple sequential IDs to distributed generation is never just a technical change—it ripples through your entire architecture in ways that aren&rsquo;t obvious until you&rsquo;re in the middle of it.</p>
+<h2 id="how-i-got-here">How I Got Here</h2>
+<p>A few years back, I watched a team migrate from sequential database IDs to Snowflake-based distributed IDs. Nothing was broken—the auto-increment system worked fine. But they were splitting their monolithic database to handle growth, and suddenly IDs needed to be generated across multiple independent instances.</p>
+<p>The migration itself was straightforward enough technically. The messier part was dealing with the existing IDs. They couldn&rsquo;t just regenerate everything—these IDs were already in URLs, external APIs, customer-facing systems, and analytics pipelines. Their solution was to offset the new IDs by a large constant (something like a billion), keeping old and new ID spaces separate through simple arithmetic.</p>
+<p>It worked, but it highlighted something I&rsquo;ve been thinking about since: ID formats aren&rsquo;t just about generation—they&rsquo;re about evolution. Once you&rsquo;ve deployed an ID format, it gets embedded everywhere. Changing it later isn&rsquo;t impossible, but it&rsquo;s expensive in ways that compound over time.</p>
+<h2 id="when-auto-increment-actually-becomes-a-problem">When Auto-Increment Actually Becomes a Problem</h2>
+<p>Let me be direct: if you&rsquo;re running a single database with moderate write traffic, you probably don&rsquo;t need to think about distributed IDs. I&rsquo;ve seen too many teams overengineer this early.</p>
+<p>But there are real triggers that make distributed ID generation necessary rather than just interesting:</p>
+<p><strong>Database sharding</strong> changes the game. You can&rsquo;t coordinate a global sequence across shards without creating exactly the bottleneck you were trying to avoid. Each shard needs to generate IDs independently.</p>
+<p><strong>Multi-region deployments</strong> introduce clock skew and make centralized coordination impractical. Local ID generation becomes necessary for both latency and availability.</p>
+<p><strong>Microservices architectures</strong> multiply the problem. When you&rsquo;ve got dozens of services all generating identifiers, forcing them through a central ID service creates coupling you don&rsquo;t want and a single point of failure you definitely don&rsquo;t want.</p>
+<p><strong>Offline-first or edge computing</strong> scenarios make it impossible to talk to a central database for ID generation. Mobile apps, IoT devices, and edge deployments need to generate valid IDs locally.</p>
+<p><strong>Event-driven systems</strong> often benefit from time-ordered IDs. When you&rsquo;re processing streams of events through Kafka or similar systems, having IDs that sort lexicographically by time simplifies a lot of downstream logic.</p>
+<p>If you&rsquo;re not hitting these patterns, stick with what works. There&rsquo;s no prize for complexity.</p>
+<h2 id="the-landscape-of-distributed-ids">The Landscape of Distributed IDs</h2>
+<p>Most distributed ID approaches fall into three broad categories, each making different tradeoffs. But before driving into specifics, it&rsquo;s useful to understand the two core dimensions that separate these approaches:</p>
+<p><strong>Dimension 1: Ordering guarantees</strong></p>
+<ul>
+<li>None (random UUIDs)</li>
+<li>Approximate (timestamp-based, best-effort across machines)</li>
+<li>Strict per-node (structured formats with sequence counters)</li>
+</ul>
+<p><strong>Dimension 2: Structure and extensibility</strong></p>
+<ul>
+<li>Opaque (pure randomness or timestamp+random)</li>
+<li>Semi-structured (fixed bit allocations)</li>
+<li>Fully structured (typed prefixes, extensible fields)</li>
+</ul>
+<p>Different systems need different points on these two axes. There&rsquo;s no universally correct choice—just tradeoffs aligned with your constraints.</p>
+<p>Timestamp-Based IDs (ULID, UUIDv7)
+These are probably the most straightforward conceptually. Take a timestamp, add some randomness, encode it. ULID is a good example: 48 bits of millisecond timestamp, 80 bits of randomness, Base32 encoded to 26 characters.</p>
+<p>The appeal is obvious—you get approximate time ordering without any coordination. Generate them anywhere, and they&rsquo;ll mostly sort by creation time. For a lot of systems, &ldquo;mostly&rdquo; is good enough.</p>
+<p>The catches are subtle but real. Millisecond timestamps mean that under high concurrency, you&rsquo;re generating multiple IDs in the same millisecond, and their ordering becomes ambiguous. Many ULID implementations add monotonic counters to handle this, but the behavior isn&rsquo;t standardized.</p>
+<p>Clock drift is the other issue. These formats assume your system clocks are reasonably accurate. In practice, NTP adjustments happen, virtualized environments drift, and multi-region deployments have synchronization quirks. If a clock jumps backward, you can generate IDs that sort before IDs you generated moments ago.</p>
+<p>ULID also doesn&rsquo;t give you structured fields. It&rsquo;s timestamp plus randomness, nothing more. If you need to encode tenant information, shard hints, or type data in the ID itself, you&rsquo;re out of luck.</p>
+<p>Structured IDs (Snowflake, Sonyflake)
+Twitter&rsquo;s Snowflake took a different approach: explicit bit allocation for time, worker ID, and sequence counter. You get strong monotonicity per worker and high throughput—4,096 IDs per millisecond per worker.</p>
+<p>The structure is both the strength and the limitation. Allocating 10 bits for worker IDs seemed reasonable until you need more than 1,024 workers. The bit layout is rigid, and evolving it means versioning your entire ID format.</p>
+<p>You also need to manage worker ID assignment, which adds operational complexity. It&rsquo;s not huge, but it&rsquo;s something you didn&rsquo;t have to think about with timestamp-based approaches.</p>
+<p>Random IDs (UUID v4)
+Sometimes you just want globally unique IDs and don&rsquo;t care about ordering. UUID v4 does this well—purely random, no coordination needed, vanishingly small collision probability.</p>
+<p>The downside is exactly what you&rsquo;d expect: no time ordering, poor index locality, and they&rsquo;re not particularly useful for anything beyond &ldquo;unique identifier.&rdquo; If you&rsquo;re building event systems or need to partition data by time, random IDs don&rsquo;t help much.</p>
+<h2 id="what-i-learned-from-ulid-at-scale">What I Learned from ULID at Scale</h2>
+<p>ULID has become really popular, and for good reason. It&rsquo;s simple, portable, and works well for most distributed systems. But I&rsquo;ve run into its limitations enough times to have opinions about where it falls short.</p>
+<p>The monotonicity story gets fuzzy under load. If you&rsquo;re generating thousands of IDs per second, you&rsquo;ll have many IDs in each millisecond bucket. Some libraries handle this with counters, others don&rsquo;t. The spec doesn&rsquo;t mandate behavior here, so you get implementation-dependent ordering guarantees.</p>
+<p>More fundamentally, ULID provides per-process monotonicity at best. True distributed monotonicity across multiple generators is impossible without coordination—each process only knows about its own IDs, not what other processes generated in the same millisecond.</p>
+<p>Clock drift is something I&rsquo;ve seen bite people in multi-region deployments. It&rsquo;s not catastrophic—we&rsquo;re usually talking about small discrepancies—but when you&rsquo;re debugging ordering issues in a distributed system, finding out that clock skew caused your IDs to sort unexpectedly is frustrating.</p>
+<p>The lack of structure has been the bigger issue for systems I&rsquo;ve worked on. In multi-tenant architectures, encoding the tenant ID in the identifier itself is useful for routing, partitioning, and query optimization. ULID doesn&rsquo;t give you space for that. Same with shard hints or type information—if you want it, you need to manage it separately.</p>
+<p>I should mention UUIDv7 here. It&rsquo;s a more recent spec that addresses some of ULID&rsquo;s ambiguities, particularly around monotonicity. It&rsquo;s a solid evolution of timestamp-based IDs. But it still has the clock dependency and limited extensibility of the format.</p>
+<h2 id="where-snowflake-shows-its-age">Where Snowflake Shows Its Age</h2>
+<p>Snowflake-style IDs work well when your requirements fit the format. Strong per-node monotonicity, high throughput, predictable bit layout—these are real advantages.</p>
+<p>But that rigidity becomes a constraint over time. I&rsquo;ve seen systems outgrow their initial worker bit allocation. I&rsquo;ve seen teams want to add region information to the ID and realize there&rsquo;s no space for it. Evolving a Snowflake format means either versioning (now you have two ID formats in production) or migrating (expensive).</p>
+<p>The operational overhead of managing worker IDs isn&rsquo;t huge, but it&rsquo;s another thing to coordinate. In cloud environments with autoscaling, you need to think about worker ID assignment and reclamation.</p>
+<h2 id="why-i-built-orderlyid">Why I Built OrderlyID</h2>
+<p>After working with these systems for a while, I wanted something that balanced structure with flexibility. OrderlyID is my attempt at finding a different point in the design space.</p>
+<p>The core idea is typed, structured IDs that can evolve without format changes:</p>
+<pre tabindex="0"><code>order_01h8n6qj3k9m2p4r6s8t0v2w4x6y8z0a
+user_01h8n6qj3k9m2p4r6s8t0v2w4x6y8z0b
+</code></pre><p>The prefix provides type safety. It&rsquo;s harder to accidentally use an order ID where you need a user ID, and when debugging, you know what you&rsquo;re looking at immediately.</p>
+<p>The payload encodes structure:</p>
+<pre tabindex="0"><code>[48b: timestamp] [8b: flags] [16b: tenant] [12b: sequence]
+[16b: shard] [60b: random]
+</code></pre><p>This gives you:</p>
+<ul>
+<li>Time ordering (with the same clock dependency as ULID)</li>
+<li>Per-process monotonicity via the sequence counter</li>
+<li>Tenant and shard fields for routing</li>
+<li>Flag bits for versioning and feature flags</li>
+<li>Enough entropy to avoid collisions</li>
+</ul>
+<p>The tenant field has a practical benefit beyond just metadata: encoding tenant IDs directly in the identifier can reduce query fanout in multi-tenant systems. The database can route or filter by ID prefix alone, avoiding table scans or complex tenant lookups.</p>
+<p>The optional checksum catches transcription errors, which matters if IDs ever get typed or spoken.</p>
+<p>I&rsquo;m not claiming OrderlyID is universally better than ULID or Snowflake. It makes different tradeoffs:</p>
+<p><strong>Tradeoffs I accepted</strong>:</p>
+<ul>
+<li>Still depends on system clocks (like ULID, UUIDv7)</li>
+<li>Longer than Snowflake (26+ characters vs 18-19)</li>
+<li>More complex to implement than ULID</li>
+<li>Not a standard like UUID</li>
+</ul>
+<p><strong>What I prioritized</strong>:</p>
+<ul>
+<li>Type safety through prefixes</li>
+<li>Structured fields without centralized coordination</li>
+<li>Evolution path through flag bits</li>
+<li>Multi-tenant and sharding use cases</li>
+</ul>
+<p>OrderlyID works for systems where type confusion is a real bug source, where you need tenant or shard routing in the ID, and where you want to evolve the format over time. If those aren&rsquo;t your concerns, ULID or UUIDv7 are probably simpler choices.</p>
+<h2 id="choosing-an-id-strategy">Choosing an ID Strategy</h2>
+<p>Here&rsquo;s how I think about this now:</p>
+<p><strong>Stick with auto-increment</strong> if you&rsquo;re on a single database and not planning to shard soon. It&rsquo;s simple, it works, and premature distribution is real.</p>
+<p><strong>Use UUID v4</strong> if ordering doesn&rsquo;t matter and you want maximum simplicity. Good for truly random identifiers where time isn&rsquo;t relevant.</p>
+<p><strong>Consider ULID or UUIDv7</strong> if you want time ordering without coordination overhead. Works well for most distributed systems with moderate concurrency. UUIDv7 is more standardized, ULID has better library support currently.</p>
+<p><strong>Use Snowflake-style IDs</strong> if you need strict per-node monotonicity and high throughput, and you&rsquo;re okay with managing worker IDs. Good choice if you control your infrastructure and don&rsquo;t expect the format to change.</p>
+<p><strong>Look at structured formats</strong> (like OrderlyID) if you need explicit tenant/shard fields, type safety matters in your domain, or you want an evolution path built in. More complexity upfront but can save migration pain later.</p>
+<p>The meta-lesson I&rsquo;ve learned: ID design matters more when you need to change it. Initial generation is usually the easy part. It&rsquo;s the evolution—adding fields, changing formats, migrating existing IDs—that&rsquo;s expensive. If you can anticipate those needs, factor them into your decision. If you can&rsquo;t, start simple and be ready to migrate when the time comes.</p>
+<h2 id="what-i-got-wrong">What I Got Wrong</h2>
+<p>I considered using hybrid logical clocks for OrderlyID to handle clock drift better. I decided against it because the complexity seemed disproportionate to the benefit for most use cases. If you need true causal ordering across distributed nodes, you probably want CRDTs or vector clocks anyway, not just smarter IDs.</p>
+<p>I also initially thought the prefix typing would feel heavyweight. It hasn&rsquo;t—turns out seeing <code>order_...</code> vs <code>user_...</code> in logs and debugging is more useful than I expected.</p>
+<p>The checksum remains optional because not everyone wants the extra characters, but I&rsquo;ve found it catches enough typos in operations work to be worth it.</p>
+<h2 id="closing-thoughts">Closing Thoughts</h2>
+<p>ID generation is one of those problems that seems simple until you&rsquo;re actually dealing with it at scale. The technical challenges—monotonicity, clock drift, collision avoidance—are well understood. The hard part is usually the evolution story: how do you change your ID format three years from now when requirements have shifted?</p>
+<p>I don&rsquo;t think there&rsquo;s one right answer. Auto-increment is great until it&rsquo;s not. ULID is simple until you need structure. Snowflake is powerful until you hit its limits. OrderlyID is my attempt to explore a different set of tradeoffs, but it&rsquo;s not universal either.</p>
+<p>The spec and implementations for OrderlyID are on GitHub if you&rsquo;re interested in the details or want to experiment with the approach. I&rsquo;m particularly interested in hearing from people dealing with multi-tenant systems or anyone who&rsquo;s gone through painful ID migrations—those stories tend to be the most educational.</p>
+<p><strong>Links:</strong></p>
+<ul>
+<li><a href="https://github.com/orderlykit/orderlyid" target="_blank" rel="noopener noreffer ">OrderlyID Specification</a></li>
+<li><a href="https://github.com/orderlykit" target="_blank" rel="noopener noreffer ">Example implementations</a></li>
+</ul>
+</div><div class="post-footer" id="post-footer">
     <div class="post-info">
         <div class="post-info-line">
             <div class="post-info-mod">
@@ -106,8 +231,7 @@
 </div>
 </article></div>
             </main><footer class="footer">
-        <div class="footer-container"><div class="footer-line">Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.152.2">Hugo</a> | Theme - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.3.0"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
-                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2022 - 2025</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">piljoong</a></span></div>
+        <div class="footer-container"><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2022 - 2025</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">piljoong</a></span></div>
         </div>
     </footer></div>
 

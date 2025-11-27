@@ -10,7 +10,10 @@
     <pubDate>Mon, 24 Nov 2025 23:25:00 &#43;0900</pubDate>
     <author>piljoong</author>
     <guid>http://localhost:1313/posts/hello-world/</guid>
-    <description><![CDATA[]]></description>
+    <description><![CDATA[<h1 id="understanding-distributed-id-generation-when-you-need-it-why-its-hard-and-how-different-approaches-compare">Understanding Distributed ID Generation: When You Need It, Why It&rsquo;s Hard, and How Different Approaches Compare</h1>
+<p>Most systems begin with the simplest possible identifier: an auto-incrementing integer in a single relational database. For many applications, this works perfectly—reliable ordering, easy debugging, and no operational overhead.
+But once systems scale beyond a single database or a single region, ID generation takes on architectural significance. Ordering, routing, sharing, and evolution all become part of the equation. And the cost of changing an ID format after a system has grown is far higher than most teams expect.
+This article isn&rsquo;t an argument that every system needs distributed IDs. Many don&rsquo;t. Instead, the goal is to provide a clear, honest framework for understanding:</p>]]></description>
 </item>
 </channel>
 </rss>

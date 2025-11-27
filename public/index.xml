@@ -12,7 +12,9 @@
     <pubDate>Mon, 24 Nov 2025 23:25:00 &#43;0900</pubDate>
     <author>piljoong</author>
     <guid>http://localhost:1313/posts/hello-world/</guid>
-    <description><![CDATA[]]></description>
+    <description><![CDATA[<h1 id="understanding-distributed-id-generation-when-you-need-it-why-its-hard-and-what-the-tradeoffs-look-like">Understanding Distributed ID Generation: When You Need It, Why It&rsquo;s Hard, and What the Tradeoffs Look Like</h1>
+<p>Most systems start with auto-increment IDs, and that&rsquo;s fine. They&rsquo;re simple, predictable, and work perfectly well until they don&rsquo;t. The problem is that &ldquo;until they don&rsquo;t&rdquo; usually arrives without much warning, often when you&rsquo;re already dealing with other scaling challenges.</p>
+<p>I&rsquo;ve seen this play out a few times now. The transition from simple sequential IDs to distributed generation is never just a technical change—it ripples through your entire architecture in ways that aren&rsquo;t obvious until you&rsquo;re in the middle of it.</p>]]></description>
 </item>
 </channel>
 </rss>

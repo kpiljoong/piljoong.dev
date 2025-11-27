@@ -20,3 +20,5 @@ theme = "LoveIt"
     Linkiedin = true
     Reddit = true
     Weibo = false
+[params.footer]
+    hugo = false
