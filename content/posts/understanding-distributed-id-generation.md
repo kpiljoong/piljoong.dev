@@ -1,6 +1,6 @@
 +++
 date = '2025-11-27T11:16:56+09:00'
-draft = true
+draft = false
 title = "Understanding Distributed ID Generation: When You Need It, Why It's Hard, and What the Tradeoffs Look Like"
 +++
 
