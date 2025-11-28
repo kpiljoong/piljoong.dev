@@ -52,7 +52,17 @@ Most distributed ID approaches fall into three broad categories, each making dif
 
 Different systems need different points on these two axes. There's no universally correct choice—just tradeoffs aligned with your constraints.
 
-Timestamp-Based IDs (ULID, UUIDv7)
+**Quick visual comparison:**
+
+| Format | Example | Length | Ordering | Structure | Coordination |
+|--------|---------|--------|----------|-----------|--------------|
+| UUID v4 | `550e8400-e29b-41d4` | 36 chars | None | Opaque | None |
+| ULID | `01ARZ3NDEKTSV4RRFFQ69G5FAV` | 26 chars | Approximate | Opaque | None |
+| Snowflake | `1234567890123456789` | 18-19 digits | Per-node | Semi | Worker IDs |
+| OrderlyID | `order_01h8n6qj...` | 32+ chars | Approximate | Full | None |
+
+### Timestamp-Based IDs (ULID, UUIDv7)
+
 These are probably the most straightforward conceptually. Take a timestamp, add some randomness, encode it. ULID is a good example: 48 bits of millisecond timestamp, 80 bits of randomness, Base32 encoded to 26 characters.
 
 The appeal is obvious—you get approximate time ordering without any coordination. Generate them anywhere, and they'll mostly sort by creation time. For a lot of systems, "mostly" is good enough.
@@ -63,14 +73,15 @@ Clock drift is the other issue. These formats assume your system clocks are reas
 
 ULID also doesn't give you structured fields. It's timestamp plus randomness, nothing more. If you need to encode tenant information, shard hints, or type data in the ID itself, you're out of luck.
 
-Structured IDs (Snowflake, Sonyflake)
+### Structured IDs (Snowflake, Sonyflake)
+
 Twitter's Snowflake took a different approach: explicit bit allocation for time, worker ID, and sequence counter. You get strong monotonicity per worker and high throughput—4,096 IDs per millisecond per worker.
 
 The structure is both the strength and the limitation. Allocating 10 bits for worker IDs seemed reasonable until you need more than 1,024 workers. The bit layout is rigid, and evolving it means versioning your entire ID format.
 
 You also need to manage worker ID assignment, which adds operational complexity. It's not huge, but it's something you didn't have to think about with timestamp-based approaches.
 
-Random IDs (UUID v4)
+### Random IDs (UUID v4)
 Sometimes you just want globally unique IDs and don't care about ordering. UUID v4 does this well—purely random, no coordination needed, vanishingly small collision probability.
 
 The downside is exactly what you'd expect: no time ordering, poor index locality, and they're not particularly useful for anything beyond "unique identifier." If you're building event systems or need to partition data by time, random IDs don't help much.
@@ -110,19 +121,40 @@ user_01h8n6qj3k9m2p4r6s8t0v2w4x6y8z0b
 The prefix provides type safety. It's harder to accidentally use an order ID where you need a user ID, and when debugging, you know what you're looking at immediately.
 
 The payload encodes structure:
+
 ```
-[48b: timestamp] [8b: flags] [16b: tenant] [12b: sequence]
-[16b: shard] [60b: random]
+┌─────────────────────────────────────────────────────────────────┐
+│                     OrderlyID Bit Layout (160 bits)             │
+├──────────┬────────┬──────────┬──────────┬──────────┬────────────┤
+│ 48 bits  │ 8 bits │ 16 bits  │ 12 bits  │ 16 bits  │  60 bits   │
+│timestamp │ flags  │  tenant  │ sequence │  shard   │  random    │
+└──────────┴────────┴──────────┴──────────┴──────────┴────────────┘
+     │         │         │          │          │           │
+     │         │         │          │          │           └─ Collision resistance
+     │         │         │          │          └─ Routing hint / partition key
+     │         │         │          └─ Monotonic counter (0-4095 per ms)
+     │         │         └─ Multi-tenant ID (0-65535)
+     │         └─ Version bits + feature flags
+     └─ Time since 2020-01-01 (milliseconds)
 ```
 
 This gives you:
 - Time ordering (with the same clock dependency as ULID)
-- Per-process monotonicity via the sequence counter
-- Tenant and shard fields for routing
-- Flag bits for versioning and feature flags
+- Per-process monotonicity via the sequence counter (up to 4,096 IDs per millisecond)
+- Tenant and shard fields for routing (supporting up to 65,535 tenants and 65,535 shards)
+- Flag bits for versioning and feature flags (including a privacy flag for time bucketing when precise timestamps could leak sensitive information)
 - Enough entropy to avoid collisions
 
 The tenant field has a practical benefit beyond just metadata: encoding tenant IDs directly in the identifier can reduce query fanout in multi-tenant systems. The database can route or filter by ID prefix alone, avoiding table scans or complex tenant lookups.
+
+**Example IDs in practice:**
+
+```
+order_01h8n6qj3k9m2p4r6s8t0v2w4x6y8z0a
+user_01h8n6qj3k9m2p4r6s8t0v2w4x6y8z0b
+payment_01h8n6qj3k9m2p4r6s8t0v2w4x6y8z0c-a1b2
+       └─ prefix   └─ 32-char payload      └─ optional checksum
+```
 
 The optional checksum catches transcription errors, which matters if IDs ever get typed or spoken.
 
@@ -158,13 +190,15 @@ Here's how I think about this now:
 
 The meta-lesson I've learned: ID design matters more when you need to change it. Initial generation is usually the easy part. It's the evolution—adding fields, changing formats, migrating existing IDs—that's expensive. If you can anticipate those needs, factor them into your decision. If you can't, start simple and be ready to migrate when the time comes.
 
-## What I Got Wrong
+## Where My Thinking Evolved
 
-I considered using hybrid logical clocks for OrderlyID to handle clock drift better. I decided against it because the complexity seemed disproportionate to the benefit for most use cases. If you need true causal ordering across distributed nodes, you probably want CRDTs or vector clocks anyway, not just smarter IDs.
+A few decisions in the early versions of OrderlyID look different to me now.
 
-I also initially thought the prefix typing would feel heavyweight. It hasn't—turns out seeing `order_...` vs `user_...` in logs and debugging is more useful than I expected.
+I originally explored hybrid logical clocks as a way to mitigate clock drift. They solve the problem elegantly, but the operational and conceptual overhead felt disproportionate to the real-world benefit. In systems that truly need causal ordering, CRDTs or vector clocks are often the right abstraction, not an ID format.
 
-The checksum remains optional because not everyone wants the extra characters, but I've found it catches enough typos in operations work to be worth it.
+I also expected typed prefixes to feel heavy or decorative. In practice, they've proven surprisingly valuable—especially in logs, debugging, and large multi-service environments where type confusion is a recurring source of subtle bugs.
+
+Finally, I made the checksum optional. Some environments don't want the extra characters, but in systems with manual workflows, the checksum has prevented enough transcription errors that I now consider it an important part of the design.
 
 ## Closing Thoughts
 
