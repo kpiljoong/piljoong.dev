@@ -40,6 +40,10 @@ enableEmoji = true
     enable = true
     pagerSize = 10
 
+[params.social]
+    GitHub = "kpiljoong"
+    Linkedin = "piljoong-kim"
+
 [params.author]
     name = "piljoong"
     email = "kpiljoong@gmail.com"
