@@ -34,6 +34,7 @@ enableEmoji = true
     name = "piljoong"
     email = "kpiljoong@gmail.com"
     link = "https://piljoong.dev"
+    avatar = "/avatar.png"
 
 [params.list]
     pagerSize = 20
