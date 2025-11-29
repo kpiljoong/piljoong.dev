@@ -4,8 +4,6 @@ draft = false
 title = "Distributed ID Generation: The Simple Thing That Gets Complicated Fast"
 +++
 
-# Distributed ID Generation: The Simple Thing That Gets Complicated Fast
-
 Most systems start with auto-increment IDs because it's the easiest possible thing that works. The database hands you numbers, you store them, life is good. There's something comforting about watching IDs tick upward in perfect sequence—12345, 12346, 12347.
 
 But IDs have a funny property: they quietly spread everywhere. Into URLs, logs, analytics pipelines, API responses, customer support workflows—all the places you don't think about until changing the format suddenly becomes painful.
