@@ -13,6 +13,8 @@ enableRobotsTXT = true
 enableGitInfo = true
 enableEmoji = true
 
+googleAnalytics = "G-DPTXCW8LVW"
+
 [params]
     title = "piljoong.dev"
     description = "piljoong's tech blog"
