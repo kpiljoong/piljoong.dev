@@ -91,6 +91,23 @@ enableEmoji = true
     hugo = false
     copyright = true
 
+[markup]
+[markup.highlight]
+    codeFences = true
+    guessSyntax = true
+    lineNos = true
+    lineNumbersInTable = true
+    style = 'solarized-light'
+[markup.goldmark]
+[markup.goldmark.extensions]
+    definitionList = true
+    footnote = true
+    linkify = true
+    strikethrough = true
+    table = true
+    taskList = true
+    typographer = true
+
 [languages]
 [languages.en]
     weight = 1
