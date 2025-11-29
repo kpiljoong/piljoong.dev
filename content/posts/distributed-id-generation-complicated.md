@@ -70,7 +70,7 @@ The typed prefix idea was popularized by TypeID, and it's genuinely useful. When
 
 But I wanted the payload itself to be structured too. So OrderlyID uses a 160-bit layout:
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────┐
 │                    OrderlyID Bit Layout (160 bits)              │
 ├──────────┬────────┬──────────┬──────────┬──────────┬────────────┤
@@ -87,7 +87,7 @@ And there's an optional checksum. I initially thought nobody would use it. Then 
 
 Here's what it looks like in practice:
 
-```
+```text
 order_01h8n6qj3k9m2p4r6s8t0v2w4x6y8z0a
 user_01h8n6qj3k9m2p4r6s8t0v2w4x6y8z0b
 payment_01h8n6qj3k9m2p4r6s8t0v2w4x6y8z0c-a1b2

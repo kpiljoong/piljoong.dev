@@ -5,6 +5,7 @@ title = 'piljoong.dev'
 theme = "DoIt"
 
 pagerSize = 12
+summaryLength = 20
 copyright = "kpiljoong@gmail.com"
 
 enableRobotsTXT = true
@@ -73,6 +74,10 @@ enableEmoji = true
     enable = true
     keepStatic = false
     auto = true
+
+[params.page.code]
+    copy = true
+    maxShownLines = 30
 
 [params.page.share]
     enable = true
