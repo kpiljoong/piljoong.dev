@@ -1,6 +1,7 @@
 baseURL = 'https://piljoong.dev/'
 defaultContentLanguage = 'en'
-languageCode = 'en-us'
+languageCode = 'en'
+languageName = "English"
 title = 'piljoong.dev'
 theme = "DoIt"
 
