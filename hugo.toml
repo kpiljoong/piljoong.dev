@@ -28,7 +28,17 @@ enableEmoji = true
     typeit = false
 
 [params.home.profile]
+    enable = true
     subtitle = ""
+    avatarURL = "/avatar.png"
+    avatarLinkURL = ""
+    title = "piljoong.dev"
+    typeit = true
+    social = true
+    disclaimer = ""
+[params.home.posts]
+    enable = true
+    pagerSize = 10
 
 [params.author]
     name = "piljoong"
