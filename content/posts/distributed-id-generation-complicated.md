@@ -132,4 +132,3 @@ ID formats look like tiny details, but they become part of the foundation of you
 The spec and implementations are here if you want to look:
 
 - https://github.com/orderlykit/orderlyid
-- https://github.com/orderlykit
