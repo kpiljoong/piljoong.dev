@@ -85,3 +85,18 @@ enableEmoji = true
     custom = ''
     hugo = false
     copyright = true
+
+[languages]
+[languages.en]
+    weight = 1
+    title = "piljoong.dev"
+    languageCode = "en"
+    languageName = "English"
+    [[languages.en.menu.main]]
+        weight = 1
+        identifer = "posts"
+        pre = ""
+        post = ""
+        name = "Posts"
+        url = "/posts/"
+        title = ""
