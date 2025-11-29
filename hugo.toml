@@ -13,8 +13,6 @@ enableRobotsTXT = true
 enableGitInfo = true
 enableEmoji = true
 
-googleAnalytics = "G-DPTXCW8LVW"
-
 [params]
     title = "piljoong.dev"
     description = "piljoong's tech blog"
@@ -93,6 +91,12 @@ googleAnalytics = "G-DPTXCW8LVW"
     custom = ''
     hugo = false
     copyright = true
+
+[params.analytics]
+    enable = true
+[params.analytics.google]
+    id = "G-DPTXCW8LVW"
+    anonymizeIP = true
 
 [markup]
 [markup.highlight]
