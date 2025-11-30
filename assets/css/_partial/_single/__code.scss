@@ -1,0 +1,55 @@
+code {
+  display: inline-block;
+  max-width: 100%;
+  padding: 0 0.4rem;
+  @include overflow-wrap(break-word);
+  @include line-break(anywhere);
+  font-size: var(--code-font-size);
+  font-family: var(--code-font-family);
+  color: $code-color;
+}
+
+pre {
+  margin: 0;
+  padding: .25rem 0 .25rem .5rem;
+  @include tab-size(4);
+
+  code {
+    padding: 5px;
+    .lnlinks {
+      color: $global-font-secondary-color;
+    }
+  }
+
+  img {
+    min-height: 1em;
+    max-height: 1.2em;
+    vertical-align: text-bottom;
+  }
+}
+
+code, pre, .highlight table, .highlight tr, .highlight td {
+  background: $code-background-color !important;
+}
+
+.highlight {
+  font-family: var(--code-font-family);
+  font-size: var(--code-font-size);
+  line-height: 1.4rem;
+  margin: .5rem 0;
+
+  .table-wrapper {
+    > table,
+    > table thead,
+    > table tr,
+    > table td {
+      margin: 0;
+      padding: 0;
+      border: none !important;
+
+      span.c {
+        white-space: nowrap;
+      }
+    }
+  }
+}

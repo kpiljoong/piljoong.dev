@@ -1,0 +1,32 @@
+# Hugo built output
+/public/
+/resources/_gen/
+/assets/jsconfig.json
+
+# Hugo modules
+/hugo_cache/
+/.hugo_build.lock
+
+# Local development
+/node_modules/
+/.DS_Store
+/dist/
+/.tmp/
+
+# OS files
+Thumbs.db
+ehthumbs.db
+Icon?
+.DS_Store
+
+# IDE / Editor
+.vscode/
+.idea/
+*.iml
+
+# Logs
+*.log
+
+# Env / keys
+.env
+.env.*

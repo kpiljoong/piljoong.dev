@@ -1,0 +1,142 @@
+baseURL = "https://piljoong.dev/"
+defaultContentLanguage = "en"
+languageCode = "en"
+languageName = "English"
+title = "piljoong.dev"
+theme = "DoIt"
+
+pagerSize = 12
+summaryLength = 20
+copyright = "kpiljoong@gmail.com"
+
+enableRobotsTXT = true
+enableGitInfo = true
+enableEmoji = true
+
+[params]
+    title = "piljoong.dev"
+    defaultTheme = "auto"
+    ShowReadingTime = true
+    description = "Senior staff engineer writing about backend systems, distributed IDs, and real-world architecture tradeoffs."
+
+[params.seo]
+    image = "images/og-default.png"
+
+[params.header]
+    desktopMode = "fixed"
+    mobileMode = "auto"
+[params.header.title]
+    logo = ""
+    name = "piljoong.dev"
+    pre = ""
+    post = ""
+    typeit = false
+
+[params.home.profile]
+    enable = true
+    subtitle = ""
+    avatarURL = "/avatar.png"
+    avatarLinkURL = ""
+    title = "piljoong.dev"
+    typeit = true
+    social = true
+    disclaimer = ""
+[params.home.posts]
+    enable = true
+    pagerSize = 10
+
+[params.social]
+    GitHub = "kpiljoong"
+    Linkedin = "piljoong-kim"
+
+[params.author]
+    name = "piljoong"
+    email = "kpiljoong@gmail.com"
+    link = "https://piljoong.dev"
+    avatar = "/avatar.png"
+
+[params.list]
+    pagerSize = 20
+    dateFormat = "01-02"
+    rss = 10
+
+[params.page]
+    hiddenFromHomePage = false
+    hiddenFromSearch = false
+    twemoji = false
+    lightgallery = false
+    ruby= true
+    fraction = true
+    linkToMarkdown = true
+
+[params.page.table]
+    sort = true
+[params.page.math]
+    enable = true
+
+[params.page.toc]
+    enable = true
+    keepStatic = false
+    auto = true
+
+[params.page.code]
+    copy = true
+    maxShownLines = 30
+
+[params.page.share]
+    enable = true
+    Linkiedin = true
+    Reddit = true
+    Weibo = false
+
+[params.footer]
+    enable = true
+    custom = ''
+    hugo = false
+    copyright = true
+
+[params.analytics]
+    enable = true
+[params.analytics.google]
+    id = "G-DPTXCW8LVW"
+    anonymizeIP = true
+
+[markup]
+[markup.highlight]
+    codeFences = true
+    guessSyntax = true
+    lineNos = true
+    lineNumbersInTable = true
+    style = 'solarized-light'
+[markup.goldmark]
+[markup.goldmark.extensions]
+    definitionList = true
+    footnote = true
+    linkify = true
+    strikethrough = true
+    table = true
+    taskList = true
+    typographer = true
+
+[languages]
+[languages.en]
+    weight = 1
+    title = "piljoong.dev"
+    languageCode = "en"
+    languageName = "English"
+    [[languages.en.menu.main]]
+        weight = 1
+        identifer = "posts"
+        pre = ""
+        post = ""
+        name = "Posts"
+        url = "/posts/"
+        title = ""
+
+[permalinks]
+    posts = "/posts/:slug/"
+
+[sitemap]
+    changefreq = "weekly"
+    priority = 0.5
+    filename = "sitemap.xml"
