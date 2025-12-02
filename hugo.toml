@@ -18,9 +18,14 @@ enableEmoji = true
     defaultTheme = "auto"
     ShowReadingTime = true
     description = "Senior staff engineer writing about backend systems, distributed IDs, and real-world architecture tradeoffs."
+    license = "Copyright"
+    licenseURL = "https://piljoong.dev/copyright/"
 
 [params.seo]
     image = "images/og-default.png"
+[params.publisher]
+    name = "piljoong.dev"
+    logo = "images/logo.png"
 
 [params.header]
     desktopMode = "fixed"

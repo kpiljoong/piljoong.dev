@@ -1,11 +1,12 @@
 +++
 date = '2025-11-27T11:16:56+09:00'
 draft = false
-title = "Distributed ID Generation: The Simple Thing That Gets Complicated Fast"
+title = "Distributed ID Formats Are Architectural Commitments, Not Just Data Types"
 description = "Why ID formats become long-term architectural commitments, and how UUID, ULID, Snowflake, and custom schemes compare."
 tags = ["distributed-systems", "ids", "architecture", "design"]
 categories = ["backend", "engineering", "architecture"]
 slug = "distributed-id-generation-complicated"
+images = ["/images/og-distributed-ids.png"]
 +++
 
 Most systems start with auto-increment IDs because it's the easiest possible thing that works. The database hands you numbers, you store them, life is good. There's something comforting about watching IDs tick upward in perfect sequence—12345, 12346, 12347.
