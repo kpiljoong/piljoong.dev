@@ -215,7 +215,7 @@ They signal that:
 
 - multiple business concepts share the same surface,
 - invariants exist only in people's heads,
-- and structural separation was deferred because the cost wasn't visible yet.
+- structural separation was deferred because the cost wasn't visible yet.
 
 Those systems work, until they don't.
 
