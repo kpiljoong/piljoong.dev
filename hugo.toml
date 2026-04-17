@@ -110,8 +110,8 @@ enableEmoji = true
 [markup.highlight]
     codeFences = true
     guessSyntax = true
-    lineNos = true
-    lineNumbersInTable = true
+    lineNos = false
+    lineNumbersInTable = false
     style = 'solarized-light'
 [markup.goldmark]
 [markup.goldmark.extensions]

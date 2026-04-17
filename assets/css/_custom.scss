@@ -1,1 +1,37 @@
 @import "_fonts";
+
+.single {
+  .content {
+    line-height: 1.65rem;
+
+    p {
+      margin: 0.8rem 0;
+    }
+
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      margin-top: 1.75rem;
+      margin-bottom: 0.8rem;
+      line-height: 1.35;
+    }
+
+    ul,
+    ol,
+    blockquote {
+      margin: 0.9rem 0;
+    }
+
+    blockquote {
+      padding: 0.45rem 0.9rem;
+    }
+
+    > * + h2,
+    > * + h3,
+    > * + h4 {
+      margin-top: 2rem;
+    }
+  }
+}
