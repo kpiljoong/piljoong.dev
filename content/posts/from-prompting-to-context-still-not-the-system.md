@@ -6,6 +6,7 @@ description = "AI made it easy to produce code, but not to keep systems in order
 tags = ["ai", "engineering", "software-design", "systems", "architecture", "agents", "state"]
 categories = ["engineering", "architecture"]
 slug = "from-prompting-to-context-still-not-the-system"
+images = ["/images/og-prompting-context-system.png"]
 +++
 
 Early on, prompting felt like the core problem.
