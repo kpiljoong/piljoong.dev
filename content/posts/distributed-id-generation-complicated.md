@@ -1,5 +1,6 @@
 +++
 date = '2025-11-27T11:16:56+09:00'
+lastmod = '2026-05-07T00:00:00+09:00'
 draft = false
 title = "Distributed ID Formats Are Architectural Commitments, Not Just Data Types"
 description = "Why ID formats become long-term architectural commitments, and how UUID, ULID, Snowflake, and custom schemes compare."
@@ -98,7 +99,7 @@ user_01h8n6qj3k9m2p4r6s8t0v2w4x6y8z0b
 payment_01h8n6qj3k9m2p4r6s8t0v2w4x6y8z0c-a1b2
 ```
 
-The tenant field turned out to be more useful than I expected. Encoding tenant IDs directly in the identifier means the database can route or filter by ID prefix alone—no table scans, no complex joins, just straight prefix matching. In multi-tenant systems at scale, this actually matters.
+The tenant field turned out to be more useful than I expected. Embedding tenant and shard metadata in the identifier means the metadata travels with the ID and can be extracted without a separate lookup. In practice, database filtering usually requires decoding the field, exposing it through a generated column, or using an expression index. Application-level routing can also extract the metadata directly from the ID. Simple prefix matching would require a different layout with the routing bits placed at the front of the encoded representation.
 
 **OrderlyID makes different tradeoffs than ULID or Snowflake.** It's longer (32+ characters vs ULID's 26), more complex to implement, and not a standard. It still depends on system clocks like every other timestamp-based format, so clock drift affects it the same way.
 
@@ -110,7 +111,7 @@ When I'm choosing an ID format today, I think about it like this:
 
 If you've got a single database and no plans to shard, use auto-increment. If you just need uniqueness and don't care about ordering, UUIDv4 is fine. If you want time ordering without coordination and moderate concurrency is good enough, go with ULID or UUIDv7.
 
-If you need very high throughput and strict per-node ordering, and you're willing to manage worker IDs, Snowflake makes sense. And if you need structured fields, tenant routing, type safety, or an evolution path, something like OrderlyID might fit better.
+If you need very high throughput and strict per-node ordering, and you're willing to manage worker IDs, Snowflake makes sense. And if you need structured fields, extractable tenant or shard metadata, type safety, or an evolution path, something like OrderlyID might fit better.
 
 It's not about "best"—it's about what constraints you're actually dealing with.
 
