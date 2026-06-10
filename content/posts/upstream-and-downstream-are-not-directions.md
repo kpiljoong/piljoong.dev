@@ -85,7 +85,7 @@ The answer depends on the noun you forgot to say.
 
 I used to treat upstream and downstream as obvious words. They are not. They only become useful after you name the flow, or less formally, after you name the river.
 
-If you mean call direction, the service you call is downstream from your caller. If the listing page calls pricing, pricing is a downstream dependency of the listing page.
+If you mean call direction, the service you call is downstream from the calling service. If the listing page calls pricing, pricing is a downstream dependency of the listing page.
 
 If you mean data origin, the producer is upstream of the data consumer. If pricing owns the price, pricing is upstream of the listing page for that field.
 
