@@ -33,21 +33,11 @@ That should not have surprised me as much as it did.
 
 Software engineering runs on metaphors. We talk about layers, pipelines, streams, queues, ownership, contracts, boundaries, and gateways because the real thing is invisible. A program has no physical layer. A service does not literally own a field. A queue is not always a line of people waiting at a counter.
 
-The metaphors work because they compress a mental model.
+The metaphors work because they compress a mental model. They fail when that model is missing.
 
-They fail when the model is missing.
+Extreme Programming had a practice called "system metaphor": a simple shared story that helped customers, programmers, and managers talk about the system in the same language. The important part was not the metaphor itself, but the shared model it carried.
 
-Extreme Programming had a practice called "system metaphor": a simple shared story that helped customers, programmers, and managers talk about the system in the same language.
-
-The important part was not the metaphor itself.
-
-It was the shared model the metaphor carried.
-
-Upstream and downstream are the same kind of tool.
-
-They are river words.
-
-But a river metaphor only helps if everyone knows which river they are standing in.
+Upstream and downstream are the same kind of tool. They are river words, but a river metaphor only helps if everyone knows which river they are standing in.
 
 ## The Case
 
@@ -99,13 +89,7 @@ The answer depends on the noun you forgot to say.
 
 ## Upstream of What?
 
-I used to treat upstream and downstream as obvious words.
-
-They are not.
-
-They only become useful after you name the flow.
-
-Or, less formally, after you name the river.
+I used to treat upstream and downstream as obvious words. They are not. They only become useful after you name the flow, or less formally, after you name the river.
 
 If you mean call direction, the service you call is downstream from your caller. If the listing page calls pricing, pricing is a downstream dependency of the listing page.
 
@@ -138,9 +122,7 @@ In the listing incident, "downstream service" sounded precise. It was not. It co
 - Which dependency could fail independently?
 - Which boundary should validate it?
 
-Those are different questions.
-
-They deserve different answers.
+Those are different questions, and they deserve different answers.
 
 When a design review says "the downstream service should handle this," the same ambiguity appears. Does downstream mean the callee? The data owner? The next step in the workflow? The consumer of an event? The system that suffers if this breaks?
 
@@ -231,9 +213,7 @@ They are less elegant, but they force the axis into the sentence.
 
 The point is not vocabulary purity. The point is to keep system conversations attached to the thing they are actually about.
 
-Calls, data, failures, ownership, and workflows all have direction.
-
-They are just not always the same direction.
+Calls, data, failures, ownership, and workflows all have direction. They are just not always the same direction.
 
 That is why upstream and downstream are useful only after you name the flow.
 
