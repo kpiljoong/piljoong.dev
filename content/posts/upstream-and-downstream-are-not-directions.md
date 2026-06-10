@@ -43,11 +43,7 @@ Upstream and downstream are the same kind of tool. They are river words, but a r
 
 Imagine a listing page in a marketplace.
 
-It renders a set of items. For each item, the page needs display metadata, availability, inspection status, price, shipping promise, and whether the item is eligible for a promotion.
-
-The page itself is not the source of truth for most of that.
-
-It calls several services:
+It renders a set of items. For each item, the page needs display metadata, availability, inspection status, price, shipping promise, and whether the item is eligible for a promotion. The page itself is not the source of truth for most of that, so it calls several services:
 
 ```text
 listing-page
@@ -64,11 +60,9 @@ During triage, someone says:
 
 > "The downstream service sent us the wrong status."
 
-That sounds clear enough. The listing page called another service. That service returned bad data.
+That sounds clear enough. The listing page called another service, and that service returned bad data.
 
-But a few minutes later, the investigation gets awkward.
-
-The shipping-promise service did not invent the status. It read inspection state from another feed. Inspection state was delayed because the warehouse system had not finished processing the item. The display page was showing a value derived from a chain of facts, not a fact owned by the service it called.
+A few minutes later, though, the investigation gets awkward. The shipping-promise service did not invent the status. It read inspection state from another feed, and that state was delayed because the warehouse system had not finished processing the item. The display page was showing a value derived from a chain of facts, not a fact owned by the service it called.
 
 Now the team has at least three directions in play.
 
@@ -107,11 +101,7 @@ That is the problem.
 
 ## The Word Hides the Axis
 
-The dangerous part is not that engineers use different flows.
-
-That happens.
-
-The dangerous part is that the same word can make people feel aligned before they actually are.
+The dangerous part is not that engineers use different flows. That happens. The dangerous part is that the same word can make people feel aligned before they actually are.
 
 In the listing incident, "downstream service" sounded precise. It was not. It collapsed several questions into one phrase:
 
@@ -213,9 +203,7 @@ They are less elegant, but they force the axis into the sentence.
 
 The point is not vocabulary purity. The point is to keep system conversations attached to the thing they are actually about.
 
-Calls, data, failures, ownership, and workflows all have direction. They are just not always the same direction.
-
-That is why upstream and downstream are useful only after you name the flow.
+Calls, data, failures, ownership, and workflows all have direction. They are just not always the same direction, which is why upstream and downstream are useful only after you name the flow.
 
 If you do not name the flow, you are not describing the system.
 
